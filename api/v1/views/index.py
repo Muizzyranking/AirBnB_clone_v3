@@ -2,6 +2,8 @@
 """Returns the status of an API."""
 
 from api.v1.views import app_views
+from flask import jsonify
+from models import storage
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
@@ -26,11 +28,11 @@ def api_stats():
     from models.amenity import Amenity
     from models.place import Place
     from models.review import Review
-    return {
+    return jsonify({
         'amenities': len(storage.all(Amenity).values()),
         'cities': len(storage.all(City).values()),
         'places': len(storage.all(Place).values()),
         'reviews': len(storage.all(Review).values()),
         'states': len(storage.all(State).values()),
         'users': len(storage.all(User).values())
-    }
+    })
