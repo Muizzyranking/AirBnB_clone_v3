@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ """
 
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from os import getenv
@@ -16,6 +16,15 @@ app.register_blueprint(app_views)
 def close_storage(error=None):
     """Function that closes the storage"""
     storage.close()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Return a JSON-formatted 404 page"""
+    response = {"error": "Not found"}
+    ret = jsonify(response)
+    ret.statusCode = 404
+    return jsonify(ret)
 
 
 # Registering the teardown method
