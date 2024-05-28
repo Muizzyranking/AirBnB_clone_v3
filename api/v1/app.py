@@ -22,8 +22,6 @@ def close_storage(error=None):
 def page_not_found(e):
     """Return a JSON-formatted 404 page"""
     response = {"error": "Not found"}
-    ret = jsonify(response)
-    ret.statusCode = 404
     return make_response(jsonify(response), 404)
 
 
