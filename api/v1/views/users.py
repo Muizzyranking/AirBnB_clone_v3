@@ -1,41 +1,29 @@
-#!/usr/bin/bash
+#!/usr/bin/python3
 """view that handles all restful api actions for users"""
 
 from app.v1.views import app_views
-from flask import app, jsonify, request, abort, make_response
+from flask import jsonify, request, abort, make_response
 from models import storage
 from models.user import User
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
-@app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
-def get_users(user_id):
+def get_users():
     """get all users"""
-    if user_id is None:
-        users = storage.all("User")
-        users_list = []
-        for user in users.values():
-            users_list.append(user.to_dict())
-        return jsonify(users_list)
-    else:
-        user = storage.get("User", user_id)
-        if user is None:
-            abort(404)
-        return jsonify(user.to_dict())
-    # users = storage.all(User)
-    # users_list = []
-    # for user in users.values():
-    #     users_list.append(user.to_dict())
-    # return jsonify(users_list)
+    users = storage.all("User")
+    users_list = []
+    for user in users.values():
+        users_list.append(user.to_dict())
+    return jsonify(users_list)
 
 
-# @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
-# def get_user(user_id):
-#     """get user by id"""
-#     user = storage.get(User, user_id)
-#     if user is None:
-#         abort(404)
-#     return jsonify(user.to_dict())
+@app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
+def get_user(user_id):
+    """get user by id"""
+    user = storage.get(User, user_id)
+    if user is None:
+        abort(404)
+    return jsonify(user.to_dict())
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
