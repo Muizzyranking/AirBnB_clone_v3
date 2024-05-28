@@ -13,7 +13,7 @@ def api_status():
     Returns:
         A JSON object containing the status of the API.
     """
-    return {'status': 'OK'}
+    return jsonify({'status': 'OK'})
 
 
 @app_views.route('/api/v1/stats', methods=['GET'], strict_slashes=False)
@@ -37,3 +37,7 @@ def api_stats():
         'states': storage.count(State),
         'users': storage.count(User)
     })
+
+
+if __name__ == '__main__':
+    pass
