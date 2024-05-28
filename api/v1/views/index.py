@@ -16,7 +16,7 @@ def api_status():
     return {'status': 'OK'}
 
 
-@app_views.route('/api/v1/stats', methods=['GET'], strict_slashes=False)
+@app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def api_stats():
     """Return the number of each object by type.
 
