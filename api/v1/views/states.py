@@ -23,7 +23,7 @@ def get_state(state_id):
         return jsonify(state.to_dict())
     else:
         return jsonify({}), 404
-    
+
 
 @app_views.route('/states/<int:state_id>',
                  methods=['DELETE'], strict_slashes=False)
@@ -36,7 +36,7 @@ def delete_state(state_id):
         return jsonify({}), 200
     else:
         return jsonify({}), 404
-    
+
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
@@ -57,7 +57,7 @@ def update_state(state_id):
     """Updates a State object."""
     state = storage.get(State, state_id)
     if state is None:
-        abort (404)
+        abort(404)
     data = request.get_json()
     if not data:
         abort(400, 'Not a JSON')
