@@ -16,24 +16,18 @@ def api_status():
     return {'status': 'OK'}
 
 
-@app_views.route('/api/v1/stats', methods=['GET'], strict_slashes=False)
+@app_views.route('/stats', strict_slashes=False)
 def api_stats():
     """Return the number of each object by type.
 
     Returns:
         A JSON object containing the number of each object by type.
     """
-    from models.user import User
-    from models.state import State
-    from models.city import City
-    from models.amenity import Amenity
-    from models.place import Place
-    from models.review import Review
     return jsonify({
-        'amenities': storage.count(Amenity),
-        'cities': storage.count(City),
-        'places': storage.count(Place),
-        'reviews': storage.count(Review),
-        'states': storage.count(State),
-        'users': storage.count(User)
+        'amenities': storage.count("Amenity"),
+        'cities': storage.count("City"),
+        'places': storage.count("Place"),
+        'reviews': storage.count("Review"),
+        'states': storage.count("State"),
+        'users': storage.count("User")
     })

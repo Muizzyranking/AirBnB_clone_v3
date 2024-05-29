@@ -1,14 +1,16 @@
 #!/usr/bin/python3
-""" """
+""" Entry point of the API """
 
-from flask import Flask
+from flask import Flask, jsonify, make_response
 from models import storage
 from api.v1.views import app_views
 from os import getenv
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
+cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
 
 # Defining a teardown method
 
@@ -16,6 +18,13 @@ app.register_blueprint(app_views)
 def close_storage(error=None):
     """Function that closes the storage"""
     storage.close()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Return a JSON-formatted 404 page"""
+    response = {"error": "Not found"}
+    return make_response(jsonify(response), 404)
 
 
 # Registering the teardown method
