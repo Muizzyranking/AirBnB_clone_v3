@@ -25,6 +25,8 @@ classes = {
     "State": State,
     "User": User}
 
+class_d = [Amenity, City, Place, Review, State, User]
+
 
 class DBStorage:
     """interaacts with the MySQL database"""
@@ -83,9 +85,12 @@ class DBStorage:
 
     def get(self, cls, id):
         """Retrieve an object"""
-        if cls is not None and isinstance(cls, str) and id is not None and\
-           isinstance(id, str) and cls in classes:
-            cls = classes[cls]
+        # if cls is not None and isinstance(cls, str) and id is not None and\
+        #    isinstance(id, str) and cls in classes:
+        #     cls = classes[cls]
+        #     result = self.__session.query(cls).filter(cls.id == id).first()
+        #     return result
+        if cls is not None and id is None and cls in class_d:
             result = self.__session.query(cls).filter(cls.id == id).first()
             return result
         else:
