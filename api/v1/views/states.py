@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Creates a new view for state object"""
+"""
+Creates a new view for state object
+"""
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -28,9 +30,9 @@ def get_state(state_id):
                  methods=['DELETE'], strict_slashes=False)
 def delete_state(state_id):
     """Deletes a state object"""
-    state = storate.get(State, state_id)
+    state = storage.get(State, state_id)
     if state:
-        storate.delete(state)
+        storage.delete(state)
         storage.save()
         return jsonify({}), 200
     else:
