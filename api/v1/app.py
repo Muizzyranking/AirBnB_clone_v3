@@ -1,38 +1,33 @@
 #!/usr/bin/python3
-""" Entry point of the API """
+"""starts a Flask web application"""
 
-from flask import Flask, jsonify, make_response
+from flask import Flask
+from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
-from os import getenv
-from flask_cors import CORS
+import os
+from flask import jsonify
 
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
+
 cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
 
-# Defining a teardown method
 
-
-def close_storage(error=None):
-    """Function that closes the storage"""
+@app.teardown_appcontext
+def close_storage(exception):
+    """Close the current SQLAlchemy session"""
     storage.close()
 
 
 @app.errorhandler(404)
-def page_not_found(e):
-    """Return a JSON-formatted 404 page"""
-    response = {"error": "Not found"}
-    return make_response(jsonify(response), 404)
-
-
-# Registering the teardown method
-app.teardown_appcontext(close_storage)
+def page_not_found(error):
+    """Return a JSON-formatted 404 status code response"""
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
-    HBNB_API_HOST = getenv("HBNB_API_HOST", "0.0.0.0")
-    HBNB_API_PORT = getenv("HBNB_API_PORT", 5000)
-    threaded = True
-    app.run(HBNB_API_HOST, HBNB_API_PORT, threaded=threaded)
+    host = os.getenv("HBNB_API_HOST", default="0.0.0.0")
+    port = os.getenv("HBNB_API_PORT", default=5000)
+    app.run(host=host, port=port, threaded=True)
