@@ -12,20 +12,12 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
-import MySQLdb
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {
-    "Amenity": Amenity,
-    "City": City,
-    "Place": Place,
-    "Review": Review,
-    "State": State,
-    "User": User}
-
-class_d = [Amenity, City, Place, Review, State, User]
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
@@ -79,30 +71,20 @@ class DBStorage:
         Session = scoped_session(sess_factory)
         self.__session = Session
 
+    def get(self, cls, id):
+        """Retrieve an object based on class and ID"""
+        if cls and id:
+            return self.__session.query(cls).get(id)
+        return None
+
+    def count(self, cls=None):
+        """Count the number of objects in storage matching the given class"""
+        if cls:
+            return self.__session.query(cls).count()
+        else:
+            return sum(self.__session.query(model).count() for model in
+                       [State, City, User, Place, Review, Amenity])
+
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
-
-    def get(self, cls, id):
-        """Retrieve an object"""
-        # if cls is not None and isinstance(cls, str) and id is not None and\
-        #    isinstance(id, str) and cls in classes:
-        #     cls = classes[cls]
-        #     result = self.__session.query(cls).filter(cls.id == id).first()
-        #     return result
-        if cls is not None and id is None and cls in class_d:
-            result = self.__session.query(cls).filter(cls.id == id).first()
-            return result
-        else:
-            return None
-
-    def count(self, cls=None):
-        """Count number of objects in storage"""
-        total = 0
-        if isinstance(cls, str) and cls in classes:
-            cls = classes[cls]
-            total = self.__session.query(cls).count()
-        elif cls is None:
-            for cls in classes.values():
-                total += self.__session.query(cls).count()
-        return total
